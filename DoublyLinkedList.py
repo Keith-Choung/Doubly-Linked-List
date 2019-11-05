@@ -24,14 +24,13 @@ class DoublyLinkedList:
 
         # If the list is not empty
         if self.head != None:
-                self.head.prev = newNode
+            self.head.prev = newNode
+            self.head = newNode
         
         else:
             self.head = newNode
             self.tail = newNode
-            
-        # The head is now the new node
-        self.head = newNode
+
         self.size += 1
 
 
@@ -41,46 +40,83 @@ class DoublyLinkedList:
         newNode = Node(newData) 
 
         # If the list is not empty
-        if self.head is None: 
-            newNode.prev = None
-            self.head = newNode 
-            self.tail = newNode
-
-        else:
+        if self.head != None: 
             temp = self.tail
             temp.next = newNode
             newNode.prev = temp
             self.tail = self.tail.next
 
+        else:
+            self.head = newNode 
+            self.tail = newNode
+
         self.size += 1
 
 
-    def insertAfter(self, prevNode, newData):
+    def insertAfter(self, target, newData):
 
         # If the list isn't empty
-        if self.head != None:
+        if self.head == None:
+            return
+
+        else:
+
             curr = self.head
 
             # Search for target node
-            while curr.data != prevNode:
+            while curr.data != target:
                 curr = curr.next
 
-            # If target was found, curr != None
-            if curr != None:
-                newNode = Node(newData)
-                newNode.prev = curr
-                newNode.next = curr.next
+                if curr == None:
+                    print("Target not found.")
+                    return
 
-                # If curr is not the last node
-                if curr.next is not None:
-                    curr.next.prev = newNode
+            newNode = Node(newData)
+            newNode.prev = curr
+            newNode.next = curr.next
 
-                else:
-                    self.tail = newNode
+            # If curr is not the last node
+            if curr.next is not None:
+                curr.next.prev = newNode
 
-                curr.next = newNode
-        else:
+            else:
+                self.tail = newNode
+
+            curr.next = newNode
+
+        self.size += 1
+
+
+    def insertBefore(self, target, newData):
+
+        # If the list isn't empty
+        if self.head == None:
             return
+
+        else:
+
+            curr = self.head
+
+            # Search for target node
+            while curr.data != target:
+                curr = curr.next
+
+                if curr == None:
+                    print("Target not found.")
+                    return
+
+            newNode = Node(newData)
+            newNode.prev = curr.prev
+            newNode.next = curr
+
+            # If curr is not the first node
+            if curr.prev != None:
+                curr.prev.next = newNode
+
+            else:
+                self.head = newNode
+
+            curr.prev = newNode
 
         self.size += 1
 
@@ -88,7 +124,10 @@ class DoublyLinkedList:
     def popFront(self):
   
         # If the list is not empty
-        if self.head != None:
+        if self.head == None:
+            return
+        
+        else:
 
             # If there ISN'T only onde node
             if self.head.next != None:
@@ -100,42 +139,43 @@ class DoublyLinkedList:
                 self.head = None
                 self.tail = None
 
-        else:
-            return 
-
         self.size -= 1
 
 
     def popBack(self):
     
         # If the list isn't empty
-        if self.head != None:
+        if self.head == None:
+            return
 
-            # If there ISN'T only onde node
-            if self.head != None:
+        else:
+
+            # If there ISN'T only one node
+            if self.head.next != None:
                 self.tail = self.tail.prev
                 self.tail.next = None
-            
-            # If there's only one node
             else:
                 self.head = None
                 self.tail = None
-
-        else:
-            return
 
         self.size -= 1
 
 
     def pop(self, target):
         
-        if self.head != None:
-            
+        if self.head == None:
+            return
+
+        else:
             curr = self.head
 
             # Search for target
             while curr.data != target:
                 curr = curr.next
+                
+                if curr == None:
+                    print("Target not found.")
+                    return
 
             # If curr is not the last node
             if curr.next != None:
@@ -143,12 +183,10 @@ class DoublyLinkedList:
                 curr.prev.next = temp
                 temp.prev = curr.prev
 
-            # If curr is the last node
+            # If curr is the last/only node
             else:
                 self.popBack()
-        
-        else:
-            return
+                return
 
         self.size -= 1
 
@@ -190,34 +228,31 @@ class DoublyLinkedList:
             self.head = temp.prev
 
 
-    def printList(self, nd): 
-        while(nd is not None): 
-            print(nd.data)
-            nd = nd.next
+    def printList(self, node): 
+
+        while(node is not None): 
+            print(node.data)
+
+            # Get next node
+            node = node.next
 
 
 dll = DoublyLinkedList()
-dll.push(1)
-dll.push(2)
+
 dll.push(3)
 dll.push(4)
+dll.insertBefore(3, 2)
+# dll.push(3)
+# dll.push(4)
 dll.pushback(5)
-# [4, 3, 2, 1, 5]
-dll.insertAfter(3, 2.5)
-# [4, 3, 2.5, 2, 1, 5]
-dll.popFront()
-# [3, 2.5, 2, 1, 5]
-dll.popBack()
-# [3, 2.5, 2, 1]
-# print(dll.head.data)
-# print(dll.head.prev.data)
-dll.popFront()
-# [2.5, 2, 1]
-dll.pop(2)
-# [2.5, 1]
-dll.insertAfter(1, 0)
-# dll.reverse()   
-# print(dll.search(1))
+dll.insertAfter(5,6)
+print("head:", dll.head.data)
+print("tail:", dll.tail.data)
+# dll.pop(5)
+
+
+
+
 
 dll.printList(dll.head)
-print("size: ", dll.size)
+# print("size: ", dll.size)
